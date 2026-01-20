@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>¡El Juego de Omar! 😎</title> <!-- Nombre en la pestaña -->
+  <style>
+    body { 
+      margin:0; 
+      font-family: sans-serif; 
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+      justify-content:center; 
+      height:100vh; 
+      background: #e0f7fa; /* Fondo azul clarito */
+    }
+    #gameArea { 
+      width:600px; 
+      height:400px; 
+      border:2px solid #333; 
+      position:relative; 
+      margin-top:20px; 
+      background:#fff; /* Fondo del área de juego */
+    }
+    .circle { 
+      width:50px; 
+      height:50px; 
+      border-radius:50%; 
+      background:#ff5722; /* Círculo naranja */
+      position:absolute; 
+      cursor:pointer; 
+    }
+    #scoreBoard { font-size:20px; margin-top:10px; }
+    #timer { font-size:20px; margin-top:5px; }
+    button { padding:10px 20px; font-size:16px; margin-top:10px; cursor:pointer; }
+  </style>
+</head>
+<body>
+
+<h1>¡El Juego de Omar! 😎</h1> <!-- Título en la página -->
+<div id="gameArea"></div>
+<div id="scoreBoard">Puntuación: 0</div>
+<div id="timer">Tiempo: 10</div>
+<button id="startBtn">Empezar Juego</button>
+
+<script>
+let score = 0;
+let timeLeft = 10;
+let interval;
+let circle;
+
+const gameArea = document.getElementById('gameArea');
+const scoreBoard = document.getElementById('scoreBoard');
+const timer = document.getElementById('timer');
+const startBtn = document.getElementById('startBtn');
+
+function startGame() {
+  score = 0;
+  timeLeft = 10;
+  scoreBoard.textContent = 'Puntuación: 0';
+  timer.textContent = 'Tiempo: 10';
+  startBtn.disabled = true;
+  spawnCircle();
+
+  interval = setInterval(() => {
+    timeLeft--;
+    timer.textContent = 'Tiempo: ' + timeLeft;
+    if(timeLeft <= 0) {
+      clearInterval(interval);
+      if(circle) circle.remove();
+      alert('¡Se acabó el tiempo! Tu puntuación: ' + score);
+      startBtn.disabled = false;
+    }
+  }, 1000);
+}
+
+function spawnCircle() {
+  if(circle) circle.remove();
+  circle = document.createElement('div');
+  circle.classList.add('circle');
+  const maxX = gameArea.clientWidth - 50;
+  const maxY = gameArea.clientHeight - 50;
+  const x = Math.floor(Math.random() * maxX);
+  const y = Math.floor(Math.random() * maxY);
+  circle.style.left = x + 'px';
+  circle.style.top = y + 'px';
+  gameArea.appendChild(circle);
+
+  circle.addEventListener('click', () => {
+    score++;
+    scoreBoard.textContent = 'Puntuación: ' + score;
+    spawnCircle();
+  });
+}
+
+startBtn.addEventListener('click', startGame);
+</script>
+
+</body>
+</html>
